@@ -6,3 +6,8 @@ Pillow==11.1.0
 rapidocr-onnxruntime
 numpy
 ocrust[models]
+torch
+transformers
+sentencepiece
+pypdf
+reportlab
