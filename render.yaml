@@ -3,7 +3,7 @@ services:
     name: atelier-document
     runtime: python
     plan: free
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    buildCommand: buildCommand: apt-get update && apt-get install -y tesseract-ocr tesseract-ocr-fra tesseract-ocr-eng && pip install --upgrade pip && pip install -r requirements.txt
     startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     envVars:
