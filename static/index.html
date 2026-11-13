@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101114">
+  <title>Atelier — Document & texte</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Atelier, accueil">
+      <span class="brand-mark">A</span>
+      <span>atelier<span class="brand-dot">.</span></span>
+    </a>
+    <div class="topbar-center"><span class="status-dot"></span> Espace de travail local</div>
+    <div class="topbar-right">
+      <span class="top-label">PROJET</span>
+      <span class="project-name" id="projectName">Sans titre</span>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <aside class="sidebar">
+      <div class="section-heading"><span class="step">01</span><span>Importer</span></div>
+
+      <label class="dropzone" id="dropzone" for="fileInput">
+        <input id="fileInput" type="file" accept=".pdf,image/*,.txt,.md" multiple>
+        <span class="plus-wrap"><span class="plus">+</span></span>
+        <strong>Déposer un document</strong>
+        <span class="drop-sub">ou <u>parcourir les fichiers</u></span>
+        <span class="file-types">PDF · PNG · JPG · WEBP · TXT</span>
+      </label>
+
+      <div class="file-list" id="fileList">
+        <div class="empty-file">Aucun fichier importé</div>
+      </div>
+
+      <div class="section-heading section-gap"><span class="step">02</span><span>Configuration</span></div>
+
+      <div class="control-card">
+        <label for="modelSelect">Modèle de traitement</label>
+        <div class="select-wrap">
+          <select id="modelSelect">
+            <option value="tesseract-fr" selected>Tesseract OCR — français</option>
+            <option value="tesseract-en">Tesseract OCR — anglais</option>
+            <option value="tesseract-fr-en">Tesseract OCR — français et anglais</option>
+            <option value="manual">Mode manuel (fichiers texte)</option>
+          </select>
+          <span class="select-chevron">⌄</span>
+        </div>
+        <p class="hint">Choisissez un profil de lecture.</p>
+      </div>
+
+      <div class="control-card">
+        <label for="exampleSelect">Exemple de configuration</label>
+        <div class="select-wrap">
+          <select id="exampleSelect">
+            <option value="none">Aucun exemple</option>
+            <option value="book">Page de livre</option>
+            <option value="article">Article / revue</option>
+            <option value="math">Document scientifique</option>
+          </select>
+          <span class="select-chevron">⌄</span>
+        </div>
+      </div>
+
+      <div class="section-heading section-gap"><span class="step">03</span><span>Instructions</span></div>
+      <div class="prompt-card">
+        <label for="promptSelect">Préréglage du prompt</label>
+        <div class="select-wrap">
+          <select id="promptSelect">
+            <option value="layout">Analyse complète de la page</option>
+            <option value="text">Extraire uniquement le texte</option>
+            <option value="structure">Repérer la structure</option>
+            <option value="math">Préserver les formules</option>
+          </select>
+          <span class="select-chevron">⌄</span>
+        </div>
+        <label class="prompt-label" for="promptText">Contenu des instructions</label>
+        <textarea id="promptText" rows="5">Décris précisément la mise en page du document. Repère les blocs de texte, les titres, les images et les formules. Conserve l'ordre de lecture.</textarea>
+        <div class="prompt-footer"><span id="charCount">—</span><span>Modifiable</span></div>
+      </div>
+
+      <button class="primary-button" id="processButton">
+        <span class="button-spark">✦</span> Extraire le texte
+        <span class="button-arrow">→</span>
+      </button>
+      <p class="sidebar-note">Extraction OCR exécutée sur le serveur.</p>
+    </aside>
+
+    <section class="workspace">
+      <div class="workspace-header">
+        <div>
+          <div class="eyebrow">ESPACE DE TRAVAIL</div>
+          <h1>Document <span class="muted-heading">&</span> transcription</h1>
+        </div>
+        <div class="header-actions">
+          <span class="save-state"><span class="status-dot"></span> En local</span>
+          <button class="icon-button" id="resetButton" title="Réinitialiser" aria-label="Réinitialiser">↺</button>
+        </div>
+      </div>
+
+      <div class="panels">
+        <section class="panel document-panel">
+          <div class="panel-heading">
+            <div><span class="panel-index">A</span><h2>Document source</h2></div>
+            <span class="panel-meta" id="documentMeta">APERÇU</span>
+          </div>
+          <div class="document-view" id="documentView">
+            <div class="document-placeholder">
+              <div class="placeholder-icon">▧</div>
+              <strong>Votre document apparaîtra ici</strong>
+              <p>Importez un PDF ou une image depuis le panneau de gauche.</p>
+              <span class="placeholder-line"></span>
+              <span class="placeholder-line short"></span>
+              <span class="placeholder-line"></span>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <span id="pageInfo">Aucun document</span>
+            <span class="zoom-label">APERÇU SOURCE</span>
+          </div>
+        </section>
+
+        <section class="panel text-panel">
+          <div class="panel-heading">
+            <div><span class="panel-index">B</span><h2>Texte extrait</h2></div>
+            <div class="text-tools">
+              <span class="editable-tag">ÉDITABLE</span>
+              <button class="small-icon-button" id="copyButton" title="Copier le texte">⧉</button>
+            </div>
+          </div>
+          <div class="editor-toolbar">
+            <span class="toolbar-label">CONTENU</span>
+            <span class="toolbar-divider"></span>
+            <button class="tool-button active" type="button">T</button>
+            <button class="tool-button" type="button"><b>B</b></button>
+            <button class="tool-button" type="button"><i>I</i></button>
+            <span class="toolbar-spacer"></span>
+            <span class="word-count" id="wordCount">0 mot</span>
+          </div>
+          <div id="textEditor" class="text-editor" contenteditable="true" spellcheck="false">
+            <div class="editor-empty">
+              <span class="editor-empty-icon">✳</span>
+              <strong>Prêt à travailler</strong>
+              <p>Le texte du document apparaîtra dans cet espace. Vous pourrez ensuite le corriger, le réorganiser ou le copier.</p>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <span id="editorStatus">En attente d'un document</span>
+            <button class="export-button" id="exportButton">Exporter le texte <span>↗</span></button>
+          </div>
+        </section>
+      </div>
+      <div class="bottom-note"><span class="bottom-line"></span> Un espace simple pour lire, extraire et retravailler vos documents.</div>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="/static/script.js"></script>
+</body>
+</html>
