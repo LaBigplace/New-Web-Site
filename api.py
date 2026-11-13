@@ -8,6 +8,7 @@ import logging
 import os
 from pathlib import Path
 from typing import Any
+import numpy as np
 
 import fitz
 
@@ -59,9 +60,13 @@ def recognize_image(image: Image.Image, language: str) -> list[dict[str, Any]]:
     """Reconnaissance OCR avec RapidOCR."""
 
     try:
-        result, _ = ocr_engine(image.convert("RGB"))
+        # Conversion de l'image PIL en tableau NumPy
+        image_array = np.array(image.convert("RGB"))
 
-        blocks: list[dict[str, Any]] = []
+        # RapidOCR effectue la reconnaissance
+        result, _ = ocr_engine(image_array)
+
+        blocks = []
 
         if result is None:
             return blocks
@@ -70,7 +75,6 @@ def recognize_image(image: Image.Image, language: str) -> list[dict[str, Any]]:
             box, text, confidence = detection
 
             text = str(text).strip()
-
             if not text:
                 continue
 
@@ -101,7 +105,6 @@ def recognize_image(image: Image.Image, language: str) -> list[dict[str, Any]]:
 
     except Exception as exc:
         logger.exception("Erreur RapidOCR")
-
         raise RuntimeError(
             f"Erreur pendant la reconnaissance OCR : {exc}"
         ) from exc
