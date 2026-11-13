@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: atelier-document
+    runtime: python
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: MAX_UPLOAD_MB
+        value: 20
+      - key: MAX_PDF_PAGES
+        value: 25
+      - key: PDF_RENDER_SCALE
+        value: 1.5
