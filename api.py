@@ -277,10 +277,13 @@ async def extract_document(
         )
 
     language_by_model = {
-        "paddle-fr": "fr",
-        "paddle-en": "en",
-        "paddle-fr-en": "fr",
-    }
+    "paddle-fr": "fr",
+    "paddle-en": "en",
+    "paddle-fr-en": "fr",
+    "tesseract-fr": "fr",
+    "tesseract-en": "en",
+    "tesseract-fr-en": "fr",
+}
 
     if model not in language_by_model:
         raise HTTPException(
